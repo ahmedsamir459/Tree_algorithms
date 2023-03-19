@@ -30,14 +30,14 @@ public class BInarySearchTree <T extends Comparable<T>> implements Tree<T> {
             }
         }
     }
-    Node<T> getPredecessor(Node<T> node) {
+    private Node<T> getPredecessor(Node<T> node) {
         if (node.getRight() != null) {
             return getPredecessor(node.getRight());
         }
         return node;
     }
     //heavily Recursive
-    Node<T>insert(T newData, Node<T> node) {
+    private Node<T>insert(T newData, Node<T> node) {
         if (node == null) {
             return new Node<>(newData);
         }
