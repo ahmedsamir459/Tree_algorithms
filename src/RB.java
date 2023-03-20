@@ -2,12 +2,13 @@ import java.awt.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class RB <T extends Comparable<T>> implements Tree<T> {
+public class RB<T extends Comparable<T>> implements Tree<T> {
     private Node<T> root;
+
     @Override
     public Tree insert(T data) {
         Node<T> node = new Node<>(data);
-        root= insert(root, root);
+        root = insert(root, root);
         recolorAndRotate(node);
         return this;
     }
@@ -22,11 +23,9 @@ public class RB <T extends Comparable<T>> implements Tree<T> {
                 uncle.flipColor();
                 grandParent.flipColor();
                 recolorAndRotate(grandParent);
-            }
-            else if(parent.isLeftChild()){
+            } else if (parent.isLeftChild()) {
                 handleLeftCase(node, parent, grandParent);
-            }
-            else if (!parent.isLeftChild()){
+            } else if (!parent.isLeftChild()) {
                 handleRightCase(node, parent, grandParent);
             }
         }
@@ -34,23 +33,23 @@ public class RB <T extends Comparable<T>> implements Tree<T> {
     }
 
     private void handleLeftCase(Node<T> node, Node<T> parent, Node<T> grandParent) {
-        if(!node.isLeftChild()){
+        if (!node.isLeftChild()) {
             rotateLeft(parent);
         }
         rotateRight(grandParent);
         parent.flipColor();
         grandParent.flipColor();
-        recolorAndRotate(node.isLeftChild()? parent : grandParent);
+        recolorAndRotate(node.isLeftChild() ? parent : grandParent);
     }
 
     private void handleRightCase(Node<T> node, Node<T> parent, Node<T> grandParent) {
-        if(node.isLeftChild()){
+        if (node.isLeftChild()) {
             rotateRight(parent);
         }
         rotateLeft(grandParent);
         parent.flipColor();
         grandParent.flipColor();
-        recolorAndRotate(node.isLeftChild()? grandParent : parent);
+        recolorAndRotate(node.isLeftChild() ? grandParent : parent);
 
     }
 
@@ -80,19 +79,17 @@ public class RB <T extends Comparable<T>> implements Tree<T> {
     }
 
     private void updateChild(Node<T> node, Node<T> leftChild) {
-        if(node.getParent()==null){
+        if (node.getParent() == null) {
             root = leftChild;
-        }
-        else if(node.isLeftChild()){
+        } else if (node.isLeftChild()) {
             node.getParent().setLeft(leftChild);
-        }
-        else {
+        } else {
             node.getParent().setRight(leftChild);
         }
     }
 
 
-    private Node<T> insert(Node<T> node, Node<T> isertedNode){
+    private Node<T> insert(Node<T> node, Node<T> isertedNode) {
         if (node == null) {
             return isertedNode;
         }
@@ -111,20 +108,18 @@ public class RB <T extends Comparable<T>> implements Tree<T> {
         root = remove(data, root);
     }
 
-    private Node<T> remove(T data,Node<T> node) {
+    private Node<T> remove(T data, Node<T> node) {
         if (node == null) {
             return null;
         }
-        if(data.compareTo(node.getData())<0){
+        if (data.compareTo(node.getData()) < 0) {
             node.setLeft(remove(data, node.getLeft()));
-        } else if (data.compareTo(node.getData())>0) {
+        } else if (data.compareTo(node.getData()) > 0) {
             node.setRight(remove(data, node.getRight()));
-        }
-        else {
-            if (node.getLeft()==null){
+        } else {
+            if (node.getLeft() == null) {
                 return node.getRight();
-            }
-            else if(node.getRight()==null){
+            } else if (node.getRight() == null) {
                 return node.getLeft();
             }
             node.setData(getMax(node.getLeft()));
@@ -134,7 +129,7 @@ public class RB <T extends Comparable<T>> implements Tree<T> {
     }
 
     private T getMax(Node<T> left) {
-        if (left.getRight()==null){
+        if (left.getRight() == null) {
             return left.getData();
         }
         return getMax(left.getRight());
@@ -148,8 +143,9 @@ public class RB <T extends Comparable<T>> implements Tree<T> {
         }
         inOrderTraversal(root);
     }
-    void inOrderTraversal(Node<T> node){
-        if (node!=null){
+
+    void inOrderTraversal(Node<T> node) {
+        if (node != null) {
             inOrderTraversal(node.getLeft());
             System.out.println(node.getData());
             inOrderTraversal(node.getRight());
