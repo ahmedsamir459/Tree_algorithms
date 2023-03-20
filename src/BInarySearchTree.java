@@ -1,11 +1,11 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class BInarySearchTree <T extends Comparable<T>> implements Tree<T> {
+public class BInarySearchTree <T extends Comparable<T>> implements ITree<T> {
     private Node<T> root;
 
     @Override
-    public Tree<T> insert(T data) {
+    public ITree<T> insert(T data) {
         if (root == null) {
             root = new Node<>(data);
         } else {

@@ -1,77 +1,117 @@
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class AvlTree <T extends Comparable <T> > implements ITree<T> {
-    private Node <T > root;
-
+public class RedBlackTree <T extends Comparable<T>> implements ITree<T> {
+    private Node<T> root;
     @Override
-    public ITree<T> insert(T data) {
-        root=insert(data, root);
+    public ITree insert(T data) {
+        Node<T> node = new Node<>(data);
+        root= insert(root, root);
+        recolorAndRotate(node);
         return this;
     }
-    private Node<T> insert(T data, Node<T> node) {
-        if (node == null) {
-            return new Node<>(data);
+
+    private void recolorAndRotate(Node<T> node) {
+        Node<T> parent = node.getParent();
+        if (node != root && parent.getColor() == Color.RED) {
+            Node<T> grandParent = parent.getParent();
+            Node<T> uncle = grandParent.getLeft() == parent ? grandParent.getRight() : grandParent.getLeft();
+            if (uncle != null && uncle.getColor() == Color.RED) {
+                parent.flipColor();
+                uncle.flipColor();
+                grandParent.flipColor();
+                recolorAndRotate(grandParent);
+            }
+            else if(parent.isLeftChild()){
+                handleLeftCase(node, parent, grandParent);
+            }
+            else if (!parent.isLeftChild()){
+                handleRightCase(node, parent, grandParent);
+            }
         }
-        if (data.compareTo(node.getData()) < 0) {
-            node.setLeft(insert(data, node.getLeft()));
-        } else {
-            node.setRight(insert(data, node.getRight()));
-        }
-        updateHeight(node);
-        return balance(node);
+        root.setColor(Color.BLACK);
     }
-    private Node <T > balance(Node <T > node) {
-        if (balanceFactor(node) > 1) {
-            if (balanceFactor(node.getLeft()) < 0) {
-                node.setLeft(rotateLeft(node.getLeft()));
-            }
-            return rotateRight(node);
+
+    private void handleLeftCase(Node<T> node, Node<T> parent, Node<T> grandParent) {
+        if(!node.isLeftChild()){
+            rotateLeft(parent);
         }
-        else if (balanceFactor(node) < -1) {
-            if (balanceFactor(node.getRight()) > 0) {
-                node.setRight(rotateRight(node.getRight()));
-            }
-            return rotateLeft(node);
+        rotateRight(grandParent);
+        parent.flipColor();
+        grandParent.flipColor();
+        recolorAndRotate(node.isLeftChild()? parent : grandParent);
+    }
+
+    private void handleRightCase(Node<T> node, Node<T> parent, Node<T> grandParent) {
+        if(node.isLeftChild()){
+            rotateRight(parent);
+        }
+        rotateLeft(grandParent);
+        parent.flipColor();
+        grandParent.flipColor();
+        recolorAndRotate(node.isLeftChild()? grandParent : parent);
+
+    }
+
+
+    private void rotateLeft(Node<T> node) {
+        Node<T> rightChild = node.getRight();
+        node.setRight(rightChild.getLeft());
+        if (node.getRight() != null) {
+            node.getRight().setParent(node);
+        }
+        rightChild.setLeft(node);
+        rightChild.setParent(node.getParent());
+        updateChild(node, rightChild);
+        node.setParent(rightChild);
+    }
+
+    private void rotateRight(Node<T> node) {
+        Node<T> leftChild = node.getLeft();
+        node.setLeft(leftChild.getRight());
+        if (node.getLeft() != null) {
+            node.getLeft().setParent(node);
+        }
+        leftChild.setRight(node);
+        leftChild.setParent(node.getParent());
+        updateChild(node, leftChild);
+        node.setParent(leftChild);
+    }
+
+    private void updateChild(Node<T> node, Node<T> leftChild) {
+        if(node.getParent()==null){
+            root = leftChild;
+        }
+        else if(node.isLeftChild()){
+            node.getParent().setLeft(leftChild);
+        }
+        else {
+            node.getParent().setRight(leftChild);
+        }
+    }
+
+
+    private Node<T> insert(Node<T> node, Node<T> isertedNode){
+        if (node == null) {
+            return isertedNode;
+        }
+        if (isertedNode.getData().compareTo(node.getData()) < 0) {
+            node.setLeft(insert(node.getLeft(), isertedNode));
+            node.getLeft().setParent(node);
+        } else {
+            node.setRight(insert(node.getRight(), isertedNode));
+            node.getRight().setParent(node);
         }
         return node;
     }
-    private Node<T> rotateLeft(Node<T> node) {
-        Node<T> newRoot = node.getRight();
-        node.setRight(newRoot.getLeft());
-        newRoot.setLeft(node);
-        updateHeight(node);
-        updateHeight(newRoot);
-        return newRoot;
-    }
-    private Node<T> rotateRight(Node<T> node) {
-        Node<T> newRoot = node.getLeft();
-        node.setLeft(newRoot.getRight());
-        newRoot.setRight(node);
-        updateHeight(node);
-        updateHeight(newRoot);
-        return newRoot;
-    }
-    private void updateHeight(Node<T> node) {
-        node.setHeight(Math.max(height(node.getLeft()), height(node.getRight())) + 1);
-    }
-    private int balanceFactor(Node<T> node) {
-        if (node == null) {
-            return 0;
-        }
-        return height(node.getLeft()) - height(node.getRight());
-    }
-    private int height(Node<T> node) {
-        if (node == null) {
-            return 0;
-        }
-        return node.getHeight();
-    }
+
     @Override
     public void remove(T data) {
         root = remove(data, root);
     }
-    private Node<T> remove(T data , Node <T> node){
+
+    private Node<T> remove(T data,Node<T> node) {
         if (node == null) {
             return null;
         }
@@ -90,9 +130,9 @@ public class AvlTree <T extends Comparable <T> > implements ITree<T> {
             node.setData(getMax(node.getLeft()));
             node.setLeft(remove(node.getData(), node.getLeft()));
         }
-        updateHeight(node);
-        return balance(node);
+        return node;
     }
+
     private T getMax(Node<T> left) {
         if (left.getRight()==null){
             return left.getData();
@@ -100,19 +140,20 @@ public class AvlTree <T extends Comparable <T> > implements ITree<T> {
         return getMax(left.getRight());
     }
 
+
     @Override
     public void traverse() {
         if (root == null) {
             return;
         }
-        System.out.println("Inorder traversal");
+        System.out.println("InOrderTraversal");
         inOrderTraversal(root);
-        System.out.println("Preorder traversal");
+        System.out.println("PreOrderTraversal");
         preOrderTraversal(root);
-        System.out.println("Postorder traversal");
+        System.out.println("PostOrderTraversal");
         postOrderTraversal(root);
     }
-    private void inOrderTraversal(Node<T> node){
+    void inOrderTraversal(Node<T> node){
         if (node!=null){
             inOrderTraversal(node.getLeft());
             System.out.println(node.getData());
@@ -120,7 +161,7 @@ public class AvlTree <T extends Comparable <T> > implements ITree<T> {
         }
 
     }
-    private void preOrderTraversal(Node<T> node){
+    void preOrderTraversal(Node<T> node){
         if (node!=null){
             System.out.println(node.getData());
             preOrderTraversal(node.getLeft());
@@ -128,7 +169,7 @@ public class AvlTree <T extends Comparable <T> > implements ITree<T> {
         }
 
     }
-    private void postOrderTraversal(Node<T> node){
+    void postOrderTraversal(Node<T> node){
         if (node!=null){
             postOrderTraversal(node.getLeft());
             postOrderTraversal(node.getRight());
@@ -159,6 +200,9 @@ public class AvlTree <T extends Comparable <T> > implements ITree<T> {
 
     @Override
     public boolean contains(T data) {
+        if (root == null) {
+            return false;
+        }
         Node<T> node = root;
         while (node != null) {
             if (data.compareTo(node.getData()) < 0) {
@@ -198,6 +242,7 @@ public class AvlTree <T extends Comparable <T> > implements ITree<T> {
         return size;
     }
 
+
     @Override
     public int height() {
         if (root == null) {
@@ -224,7 +269,6 @@ public class AvlTree <T extends Comparable <T> > implements ITree<T> {
             }
         }
     }
-
     @Override
     public void clear() {
         root = null;
