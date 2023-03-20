@@ -12,7 +12,6 @@ class Dictionary {
         } else if (type == 2) {
             d = new RB<>();
         }
-
     }
 
     public void insert(String data) {
@@ -25,10 +24,10 @@ class Dictionary {
         size--;
     }
 
-    //public Boolean search(String data)
-// {
-//     return d.Search(data);
-// }
+    public Boolean search(String data) {
+        return d.contains(data);
+    }
+
     public void batch_insert(String path) {
         try {
             File myObj = new File(path);
@@ -68,13 +67,11 @@ class Dictionary {
 
     public int getSize() {
 
-        return d.getSize();
+        return size;
     }
 
-//public int getHeight()
-//{
-//    return  height;
-//}
-
+    public int getHeight() {
+        return getHeight();
+    }
 
 }
