@@ -105,17 +105,47 @@ public class RB<T extends Comparable<T>> implements Tree<T> {
 
     @Override
     public void delete(T data) {
-        root = remove(data, root);
+        root = delete(data, root);
+        recolorAndRotateafterdelete(root);
     }
 
-    private Node<T> remove(T data, Node<T> node) {
+    private void recolorAndRotateafterdelete(Node<T> root) {
+        if (root == null) {
+            return;
+        }
+        if (root.getLeft() != null && root.getLeft().getColor() == Color.RED) {
+            root.getLeft().flipColor();
+        }
+        if (root.getRight() != null && root.getRight().getColor() == Color.RED) {
+            root.getRight().flipColor();
+        }
+        if (root.getRight() != null && root.getRight().getColor() == Color.RED && root.getRight().getRight() != null && root.getRight().getRight().getColor() == Color.RED) {
+            rotateLeft(root);
+            root.flipColor();
+            root.getLeft().flipColor();
+        }
+        if (root.getLeft() != null && root.getLeft().getColor() == Color.RED && root.getLeft().getLeft() != null && root.getLeft().getLeft().getColor() == Color.RED) {
+            rotateRight(root);
+            root.flipColor();
+            root.getRight().flipColor();
+        }
+        if (root.getLeft() != null && root.getLeft().getColor() == Color.RED && root.getRight() != null && root.getRight().getColor() == Color.RED) {
+            root.flipColor();
+            root.getLeft().flipColor();
+            root.getRight().flipColor();
+        }
+        recolorAndRotateafterdelete(root.getLeft());
+        recolorAndRotateafterdelete(root.getRight());
+    }
+
+    private Node<T> delete(T data, Node<T> node) {
         if (node == null) {
             return null;
         }
         if (data.compareTo(node.getData()) < 0) {
-            node.setLeft(remove(data, node.getLeft()));
+            node.setLeft(delete(data, node.getLeft()));
         } else if (data.compareTo(node.getData()) > 0) {
-            node.setRight(remove(data, node.getRight()));
+            node.setRight(delete(data, node.getRight()));
         } else {
             if (node.getLeft() == null) {
                 return node.getRight();
@@ -123,8 +153,9 @@ public class RB<T extends Comparable<T>> implements Tree<T> {
                 return node.getLeft();
             }
             node.setData(getMax(node.getLeft()));
-            node.setLeft(remove(node.getData(), node.getLeft()));
+            node.setLeft(delete(node.getData(), node.getLeft()));
         }
+
         return node;
     }
 
@@ -198,51 +229,12 @@ public class RB<T extends Comparable<T>> implements Tree<T> {
 
     @Override
     public int getSize() {
-        if (root == null) {
-            return 0;
-        }
-        Queue<Node<T>> queue = new LinkedList<>();
-        queue.add(root);
-        int size = 0;
-        while (!queue.isEmpty()) {
-            Node<T> node = queue.remove();
-            size++;
-            if (node.getLeft() != null) {
-                queue.add(node.getLeft());
-            }
-            if (node.getRight() != null) {
-                queue.add(node.getRight());
-            }
-        }
-        return size;
+        return 0;
     }
-
 
     @Override
     public int getHeight() {
-        if (root == null) {
-            return 0;
-        }
-        Queue<Node<T>> queue = new LinkedList<>();
-        queue.add(root);
-        int height = 0;
-        while (true) {
-            int nodeCount = queue.size();
-            if (nodeCount == 0) {
-                return height;
-            }
-            height++;
-            while (nodeCount > 0) {
-                Node<T> node = queue.remove();
-                if (node.getLeft() != null) {
-                    queue.add(node.getLeft());
-                }
-                if (node.getRight() != null) {
-                    queue.add(node.getRight());
-                }
-                nodeCount--;
-            }
-        }
+        return 0;
     }
 
 }
