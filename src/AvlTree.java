@@ -1,9 +1,14 @@
+import lombok.Data;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
+@Data
 public class AvlTree <T extends Comparable <T> > implements ITree<T> {
     private Node <T > root;
-
+    public Node <T > getRoot() {
+        return root;
+    }
     @Override
     public ITree<T> insert(T data) {
         root=insert(data, root);

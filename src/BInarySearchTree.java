@@ -211,4 +211,9 @@ public class BInarySearchTree <T extends Comparable<T>> implements ITree<T> {
     public void clear() {
         root = null;
     }
+
+    @Override
+    public Node<T> getRoot() {
+        return root;
+    }
 }

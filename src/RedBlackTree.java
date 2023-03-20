@@ -109,6 +109,36 @@ public class RedBlackTree <T extends Comparable<T>> implements ITree<T> {
     @Override
     public void remove(T data) {
         root = remove(data, root);
+        recolorAndRotateafterRemove(root);
+    }
+
+    private void recolorAndRotateafterRemove(Node<T> root) {
+        if(root==null){
+            return;
+        }
+        if(root.getLeft()!=null && root.getLeft().getColor()==Color.RED){
+            root.getLeft().flipColor();
+        }
+        if(root.getRight()!=null && root.getRight().getColor()==Color.RED){
+            root.getRight().flipColor();
+        }
+        if(root.getRight()!=null && root.getRight().getColor()==Color.RED && root.getRight().getRight()!=null && root.getRight().getRight().getColor()==Color.RED){
+            rotateLeft(root);
+            root.flipColor();
+            root.getLeft().flipColor();
+        }
+        if(root.getLeft()!=null && root.getLeft().getColor()==Color.RED && root.getLeft().getLeft()!=null && root.getLeft().getLeft().getColor()==Color.RED){
+            rotateRight(root);
+            root.flipColor();
+            root.getRight().flipColor();
+        }
+        if(root.getLeft()!=null && root.getLeft().getColor()==Color.RED && root.getRight()!=null && root.getRight().getColor()==Color.RED){
+            root.flipColor();
+            root.getLeft().flipColor();
+            root.getRight().flipColor();
+        }
+        recolorAndRotateafterRemove(root.getLeft());
+        recolorAndRotateafterRemove(root.getRight());
     }
 
     private Node<T> remove(T data,Node<T> node) {
@@ -130,6 +160,7 @@ public class RedBlackTree <T extends Comparable<T>> implements ITree<T> {
             node.setData(getMax(node.getLeft()));
             node.setLeft(remove(node.getData(), node.getLeft()));
         }
+
         return node;
     }
 
@@ -272,5 +303,10 @@ public class RedBlackTree <T extends Comparable<T>> implements ITree<T> {
     @Override
     public void clear() {
         root = null;
+    }
+
+    @Override
+    public Node<T> getRoot() {
+        return root;
     }
 }

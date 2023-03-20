@@ -1,3 +1,5 @@
+import java.awt.color.ICC_Profile;
+
 public interface ITree<T extends Comparable <T> > {
     ITree<T> insert(T data);
     void remove(T data);
@@ -9,4 +11,6 @@ public interface ITree<T extends Comparable <T> > {
     int size();
     int height();
     void clear();
+
+    Node<T> getRoot();
 }
