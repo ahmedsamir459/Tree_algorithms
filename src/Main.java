@@ -9,7 +9,7 @@ public class Main {
         int D_type;
 
         Dictionary d;
-
+        //YOUSSEF
             D_type = scanner.nextInt();
             while (D_type != 1 && D_type != 0 ){
                 System.out.print("\u001B[31mError,Please choose a right answer\n\u001B[0mAnswer>>");
