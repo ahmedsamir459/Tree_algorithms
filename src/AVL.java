@@ -125,7 +125,7 @@ public class AVL<T extends Comparable<T>> implements Tree<T> {
     private void inOrderTraversal(Node<T> node) {
         if (node != null) {
             inOrderTraversal(node.getLeft());
-            System.out.println(node.getData());
+            System.out.println("\u001B[34m"+node.getData()+"\u001B[0m");
             inOrderTraversal(node.getRight());
         }
 
