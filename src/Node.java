@@ -19,4 +19,7 @@ public class Node<T extends Comparable<T>> {
        setColor(getColor() == Color.RED ? Color.BLACK : Color.RED);
     }
 
+    public boolean hasRedChild() {
+        return (left != null && left.getColor() == Color.RED) || (right != null && right.getColor() == Color.RED);
+    }
 }

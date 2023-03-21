@@ -30,7 +30,8 @@ public class UnitTest {
 //        assertEquals(5, avlTree.height());
 //        assertEquals(1, (int) avlTree.getMin());
 //        assertEquals(20, (int) avlTree.getMax());
-        assertEquals(20, (int) avlTree.getRoot().getData());
+        testbalnce(avlTree.getRoot());
+
 //        assertTrue(avlTree.contains(10));
 //        assertTrue(avlTree.contains(5));
 //        assertTrue(avlTree.contains(15));
@@ -70,6 +71,22 @@ public class UnitTest {
 //        assertTrue(avlTree.contains(6));
 //        assertTrue(avlTree.contains(8));
 //        assertTrue(avlTree.contains(11));
+    }
+    void testbalnce(Node <Integer> node) {
+        if (node == null) {
+            return;
+        }
+        try {
+            int h1 = node.getLeft() == null ? 0 : node.getLeft().getHeight();
+            int h2 = node.getRight() == null ? 0 : node.getRight().getHeight();
+            assertEquals(1, Math.abs(h1 - h2));
+        } catch (AssertionError e) {
+            int h1 = node.getLeft() == null ? 0 : node.getLeft().getHeight();
+            int h2 = node.getRight() == null ? 0 : node.getRight().getHeight();
+            assertEquals(0, Math.abs(h1 - h2));
+        }
+        testbalnce(node.getLeft());
+        testbalnce(node.getRight());
     }
 }
 

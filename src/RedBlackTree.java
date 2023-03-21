@@ -3,11 +3,17 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class RedBlackTree <T extends Comparable<T>> implements ITree<T> {
+    private class NulNode<T extends Comparable<T>> extends Node<T> {
+        public NulNode() {
+            super(null);
+            setColor(Color.BLACK);
+        }
+    }
     private Node<T> root;
     @Override
     public ITree insert(T data) {
         Node<T> node = new Node<>(data);
-        root= insert(root, root);
+        root= insert(root, node);
         recolorAndRotate(node);
         return this;
     }
@@ -89,6 +95,9 @@ public class RedBlackTree <T extends Comparable<T>> implements ITree<T> {
         else {
             node.getParent().setRight(leftChild);
         }
+        if (leftChild!=null){
+            leftChild.setParent(node.getParent());
+        }
     }
 
 
@@ -108,68 +117,142 @@ public class RedBlackTree <T extends Comparable<T>> implements ITree<T> {
 
     @Override
     public void remove(T data) {
-        root = remove(data, root);
-        recolorAndRotateafterRemove(root);
-    }
-
-    private void recolorAndRotateafterRemove(Node<T> root) {
-        if(root==null){
+        Node<T> node =root,replaced;
+        Color color;
+        while (node!=null && node.getData().compareTo(data)!=0){
+            if (data.compareTo(node.getData())<0){
+                node = node.getLeft();
+            }
+            else {
+                node = node.getRight();
+            }
+        }
+        if (node==null){
             return;
         }
-        if(root.getLeft()!=null && root.getLeft().getColor()==Color.RED){
-            root.getLeft().flipColor();
-        }
-        if(root.getRight()!=null && root.getRight().getColor()==Color.RED){
-            root.getRight().flipColor();
-        }
-        if(root.getRight()!=null && root.getRight().getColor()==Color.RED && root.getRight().getRight()!=null && root.getRight().getRight().getColor()==Color.RED){
-            rotateLeft(root);
-            root.flipColor();
-            root.getLeft().flipColor();
-        }
-        if(root.getLeft()!=null && root.getLeft().getColor()==Color.RED && root.getLeft().getLeft()!=null && root.getLeft().getLeft().getColor()==Color.RED){
-            rotateRight(root);
-            root.flipColor();
-            root.getRight().flipColor();
-        }
-        if(root.getLeft()!=null && root.getLeft().getColor()==Color.RED && root.getRight()!=null && root.getRight().getColor()==Color.RED){
-            root.flipColor();
-            root.getLeft().flipColor();
-            root.getRight().flipColor();
-        }
-        recolorAndRotateafterRemove(root.getLeft());
-        recolorAndRotateafterRemove(root.getRight());
-    }
-
-    private Node<T> remove(T data,Node<T> node) {
-        if (node == null) {
-            return null;
-        }
-        if(data.compareTo(node.getData())<0){
-            node.setLeft(remove(data, node.getLeft()));
-        } else if (data.compareTo(node.getData())>0) {
-            node.setRight(remove(data, node.getRight()));
+        if (node.getLeft()==null || node.getRight()==null){
+            replaced = deleteNode(node);
+            color = node.getColor();
         }
         else {
-            if (node.getLeft()==null){
-                return node.getRight();
-            }
-            else if(node.getRight()==null){
-                return node.getLeft();
-            }
-            node.setData(getMax(node.getLeft()));
-            node.setLeft(remove(node.getData(), node.getLeft()));
+            Node<T> successor = getMin(node.getRight());
+            node.setData(successor.getData());
+            replaced = deleteNode(successor);
+            color = successor.getColor();
         }
 
-        return node;
+        if (color==Color.BLACK){
+            fixDoubleBlack(replaced);
+            if(replaced.getClass()==NulNode.class){
+                updateChild(replaced, null);
+            }
+        }
+
+
     }
 
-    private T getMax(Node<T> left) {
-        if (left.getRight()==null){
-            return left.getData();
+    private void fixDoubleBlack(Node<T> replaced) {
+        if(replaced==root){
+            return;
         }
-        return getMax(left.getRight());
+        Node<T> sibling = replaced.isLeftChild()? replaced.getParent().getRight() : replaced.getParent().getLeft();
+        if (sibling.getColor()==Color.RED){
+            replaced.getParent().flipColor();
+            sibling.flipColor();
+            if (sibling.isLeftChild()){
+                rotateLeftd(replaced.getParent());
+            }
+            else {
+                rotateRightd(replaced.getParent());
+            }
+            sibling = replaced.isLeftChild()? replaced.getParent().getRight() : replaced.getParent().getLeft();
+        }
+        if((sibling.getLeft()==null||sibling.getColor()==Color.BLACK)&& (sibling.getRight()==null||sibling.getColor()==Color.BLACK)){
+            sibling.setColor(Color.RED);
+            if (replaced.getParent().getColor()==Color.RED){
+                replaced.getParent().setColor(Color.BLACK);
+            }
+            else {
+                fixDoubleBlack(replaced.getParent());
+            }
+        }
+        else {
+            if(replaced.isLeftChild() && (sibling.getRight()==null||sibling.getRight().getColor()==Color.BLACK)){
+                sibling.getLeft().setColor(Color.BLACK);
+                sibling.flipColor();
+                rotateRightd(sibling);
+                sibling = replaced.getParent().getRight();
+            }
+            else if(!replaced.isLeftChild() && (sibling.getLeft()==null||sibling.getLeft().getColor()==Color.BLACK)){
+                sibling.getRight().setColor(Color.BLACK);
+                sibling.flipColor();
+                rotateLeftd(sibling);
+                sibling = replaced.getParent().getLeft();
+            }
+            sibling.setColor(replaced.getParent().getColor());
+            replaced.getParent().setColor(Color.BLACK);
+            if (replaced.isLeftChild()){
+                sibling.getRight().setColor(Color.BLACK);
+                rotateLeftd(replaced.getParent());
+            }
+            else {
+                sibling.getLeft().setColor(Color.BLACK);
+                rotateRightd(replaced.getParent());
+            }
+        }
+
     }
+    private void rotateRightd(Node node) {
+        Node leftChild = node.getLeft();
+
+        node.setLeft(leftChild.getRight());
+        if (leftChild.getRight() != null) {
+            leftChild.getRight().setParent( node);
+        }
+
+        leftChild.setRight( node);
+        node.setParent(leftChild);
+
+        updateChild(node, leftChild);
+    }
+
+    private void rotateLeftd(Node node) {
+        Node rightChild = node.getRight();
+
+        node.setRight(rightChild.getLeft());
+        if (rightChild.getLeft() != null) {
+            rightChild.getLeft().setParent(node);
+        }
+
+        rightChild.setLeft(node);
+        node.setParent(rightChild);
+
+        updateChild(node, rightChild);
+    }
+
+    Node deleteNode(Node node){
+        if(node.getLeft()!=null){
+            updateChild(node, node.getLeft());
+            return node.getLeft();
+        }
+        else if(node.getRight()!=null){
+            updateChild(node, node.getRight());
+            return node.getRight();
+        }
+        else {
+            Node <T> nulNode = node.getColor()==Color.BLACK?new NulNode():null;
+            updateChild(node, nulNode);
+            return nulNode;
+        }
+    }
+    private Node getMin(Node right) {
+        if (right.getLeft()==null){
+            return right;
+        }
+        return getMin(right.getLeft());
+    }
+
+
 
 
     @Override
@@ -309,4 +392,5 @@ public class RedBlackTree <T extends Comparable<T>> implements ITree<T> {
     public Node<T> getRoot() {
         return root;
     }
+
 }
