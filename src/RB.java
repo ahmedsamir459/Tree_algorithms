@@ -1,6 +1,4 @@
 import java.awt.*;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class RB<T extends Comparable<T>> implements Tree<T> {
     private Node<T> root;

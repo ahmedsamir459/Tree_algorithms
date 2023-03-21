@@ -74,14 +74,14 @@ public class Main {
                 else if (option == 4) {
                     System.out.print("Enter the word to delete>>");
                     String toDelete = scanner.next();
-                    d.insert(toDelete);
+                    d.delete(toDelete);
                 }
 
                 //BATCH DELETE
                 else if (option == 5) {
                     System.out.print("Enter the path of the file to delete>>");
                     String fileToDelete = scanner.next();
-                    d.batch_insert(fileToDelete);
+                    d.batch_delete(fileToDelete);
                 }
 
                 //SEARCH
@@ -93,15 +93,15 @@ public class Main {
 
                 //SIZE
                 else if (option == 7) {
-                    System.out.println("Dictionary size = " + d.getSize());
+                    System.out.println("\u001B[34mDictionary size = " +"(\u001B[0m" +d.getSize()+"\u001B[34m)\u001B[0m");
                 }
 
-                //HEIGHT
+                //HEIGHT Todo
                 else if (option == 8) {
-                    System.out.println("Dictionary tree height = " + d.getHeight());
+                    System.out.println("\u001B[34mDictionary tree height = " +"(\u001B[0m"+ d.getHeight()+"\u001B[34m)\u001B[0m");
                 }
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 System.out.print("\u001B[31mError,Please choose a right option\n\u001B[0m");
             }
         }

@@ -9,6 +9,7 @@ public class Node<T extends Comparable<T>> {
     private T data;
     private int height = 1;
 
+
     public T getData() {
         return data;
     }

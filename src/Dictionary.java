@@ -1,6 +1,6 @@
-import java.io.File;  // Import the File class
-import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.util.Scanner; // Import the Scanner class to read text files
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 class Dictionary {
     Tree d;
@@ -25,9 +25,15 @@ class Dictionary {
         }
     }
 
-    public void delete(String data) {
-        d.delete(data);
-        size--;
+    public void delete(String toDelete) {
+        if (!d.contains(toDelete)) {
+            System.out.print("(" + toDelete + ")" + "\u001B[31mword NOT FOUND\n\u001B[0m");
+        }
+        else {
+            d.delete(toDelete);
+            System.out.print("(" + toDelete + ")" + "\u001B[32m Succefully DELETED ✅\n\u001B[0m");
+            size--;
+        }
     }
 
     public Boolean search(String toSearch) {
@@ -56,30 +62,41 @@ class Dictionary {
                     size++;
                 }
             }
+            myReader.close();
             System.out.print("("+Inserted+")"+"\u001B[32m words SUCCEFULLY INSERTED ✅\n\u001B[0m");
             if(notInserted !=0) {
                 System.out.print("(" + notInserted + ")" + "\u001B[31m words ALREADY EXIST \n\u001B[0m");
             }
-            myReader.close();
+
         } catch (FileNotFoundException e) {
-            System.out.println("An error occurred opening file");
-            e.printStackTrace();
+            System.out.println("\u001B[31mAn ERROR occurred opening file\u001B[0m ");
         }
     }
 
     public void batch_delete(String path) {
         try {
+            int Found=0;
+            int notFOUND=0;
             File myObj = new File(path);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
-                d.delete(data);
-                size--;
+                if (d.contains(data)) {
+                    d.delete(data);
+                    Found++;
+                }
+                else {
+                    notFOUND++;
+                }
             }
             myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred opening file");
-            e.printStackTrace();
+            System.out.print("("+Found+")"+"\u001B[32m words SUCCEFULLY DELETED ✅\n\u001B[0m");
+            if(notFOUND !=0) {
+                System.out.print("(" + notFOUND + ")" + "\u001B[31m words NOT FOUND \n\u001B[0m");
+            }
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("\u001B[31mAn ERROR occurred opening file\u001B[0m ");
         }
 
     }
@@ -96,6 +113,7 @@ class Dictionary {
         return size;
     }
 
+    // TODO
     public int getHeight() {
         return getHeight();
     }
