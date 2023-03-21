@@ -4,11 +4,12 @@ import java.util.Queue;
 
 public class RB<T extends Comparable<T>> implements Tree<T> {
     private Node<T> root;
-
+private int size=0;
     @Override
     public Tree insert(T data) {
         Node<T> node = new Node<>(data);
-        root = insert(root, root);
+        root = insert(root, node);
+        size++;
         recolorAndRotate(node);
         return this;
     }
@@ -100,12 +101,14 @@ public class RB<T extends Comparable<T>> implements Tree<T> {
             node.setRight(insert(node.getRight(), isertedNode));
             node.getRight().setParent(node);
         }
+        updateHeight(node);
         return node;
     }
 
     @Override
     public void delete(T data) {
         root = delete(data, root);
+        size--;
         recolorAndRotateafterdelete(root);
     }
 
@@ -155,7 +158,7 @@ public class RB<T extends Comparable<T>> implements Tree<T> {
             node.setData(getMax(node.getLeft()));
             node.setLeft(delete(node.getData(), node.getLeft()));
         }
-
+        updateHeight(node);
         return node;
     }
 
@@ -165,14 +168,27 @@ public class RB<T extends Comparable<T>> implements Tree<T> {
         }
         return getMax(left.getRight());
     }
-
+    private void updateHeight(Node<T> node) {
+        node.setHeight(Math.max(height(node.getLeft()), height(node.getRight())) + 1);
+    }
+    private int height(Node<T> node) {
+        if (node == null) {
+            return 0;
+        }
+        return node.getHeight();
+    }
 
     @Override
     public void traverse() {
         if (root == null) {
             return;
         }
+        System.out.println("inorder traversal");
         inOrderTraversal(root);
+        System.out.println("preoder traversal");
+        preOrderTraversal(root);
+        System.out.println("postorder traversal");
+        postOrderTraversal(root);
     }
 
     void inOrderTraversal(Node<T> node) {
@@ -181,6 +197,22 @@ public class RB<T extends Comparable<T>> implements Tree<T> {
             System.out.println(node.getData());
             inOrderTraversal(node.getRight());
         }
+    }
+    void preOrderTraversal(Node<T> node){
+        if (node!=null){
+            System.out.println(node.getData());
+            preOrderTraversal(node.getLeft());
+            preOrderTraversal(node.getRight());
+        }
+
+    }
+    void postOrderTraversal(Node<T> node){
+        if (node!=null){
+            postOrderTraversal(node.getLeft());
+            postOrderTraversal(node.getRight());
+            System.out.println(node.getData());
+        }
+
     }
 
 
@@ -229,12 +261,12 @@ public class RB<T extends Comparable<T>> implements Tree<T> {
 
     @Override
     public int getSize() {
-        return 0;
+        return size;
     }
 
     @Override
     public int getHeight() {
-        return 0;
+        return root.getHeight();
     }
 
 }
