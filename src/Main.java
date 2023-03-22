@@ -9,33 +9,35 @@ public class Main {
         ITree<Integer> tree = new RedBlackTree<>();
         tree.insert(10);
         printTree(tree.getRoot());
-        tree.insert(5);
-        printTree(tree.getRoot());
-        tree.insert(15);
-        printTree(tree.getRoot());
-        tree.insert(3);
-        printTree(tree.getRoot());
-        tree.insert(7);
-        printTree(tree.getRoot());
-        tree.insert(12);
-        printTree(tree.getRoot());
-        tree.insert(18);
-        printTree(tree.getRoot());
-        tree.insert(1);
-        printTree(tree.getRoot());
-        tree.insert(4);
-        printTree(tree.getRoot());
-        tree.insert(6);
+        tree.insert(24);
         printTree(tree.getRoot());
         tree.insert(8);
         printTree(tree.getRoot());
-        tree.remove(4);
+        tree.insert(18);
         printTree(tree.getRoot());
-        tree.remove(5);
+        tree.insert(17);
         printTree(tree.getRoot());
-        tree.remove(6);
+        tree.insert(22);
         printTree(tree.getRoot());
+        tree.remove(17);
+        printTree(tree.getRoot());
+
+//        tree.insert(22);
+//        printTree(tree.getRoot());
+//        tree.insert(15);
+//        printTree(tree.getRoot());
+//        tree.insert(6);
+//        printTree(tree.getRoot());
+//        tree.insert(8);
+//        printTree(tree.getRoot());
+//        tree.remove(4);
+//        printTree(tree.getRoot());
+//        tree.remove(5);
+//        printTree(tree.getRoot());
+//        tree.remove(6);
+//        printTree(tree.getRoot());
     }
+
     public static <T extends Comparable<T>> void printTree(Node<T> root) {
         printSubtree(Collections.singletonList(root), 1, getHeight(root));
     }
@@ -56,7 +58,7 @@ public class Main {
         for (Node<T> node : nodes) {
             if (node != null) {
                 System.out.print(node.getData());
-                System.out.print((node.getColor()== Color.RED)? "R" : "B");
+                System.out.print((node.getColor() == Color.RED) ? "R" : "B");
                 newNodes.add(node.getLeft());
                 newNodes.add(node.getRight());
             } else {

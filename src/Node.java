@@ -5,13 +5,17 @@ import java.awt.*;
 
 @Data
 public class Node<T extends Comparable<T>> {
-    @NonNull
     private T data;
     private int height = 1;
     private Node<T> left;
     private Node<T> right;
     private Node<T> parent;
     private Color color = Color.RED;
+
+    public Node(T data) {
+        this.data = data;
+    }
+
     public boolean isLeftChild() {
         return parent != null && parent.getLeft() == this;
     }
