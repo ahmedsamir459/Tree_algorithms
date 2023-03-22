@@ -209,7 +209,6 @@ public class RedBlackTree <T extends Comparable<T>> implements ITree<T> {
                 rotateLeft(replaced.getParent());
             }
             else {
-//                System.out.println("here");
                 sibling.getLeft().setColor(BLACK);
                 rotateRight(replaced.getParent());
             }
