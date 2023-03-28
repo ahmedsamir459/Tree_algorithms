@@ -1,4 +1,4 @@
-import java.awt.color.ICC_Profile;
+package Trees;
 
 public interface ITree<T extends Comparable <T> > {
     ITree<T> insert(T data);

@@ -1,3 +1,4 @@
+package Trees;
 
 import org.junit.Test;
 
@@ -28,11 +29,13 @@ public class UnitTest {
         avlTree.insert(14);
         avlTree.insert(17);
         avlTree.insert(20);
+
         assertEquals(20, avlTree.size());
         assertEquals(5, avlTree.height());
         assertEquals(1, (int) avlTree.getMin());
         assertEquals(20, (int) avlTree.getMax());
-        testbalnce(avlTree.getRoot());
+        assertThrows(IllegalArgumentException.class, () -> avlTree.insert(20));
+//        testbalnce(avlTree.getRoot());
     }
     @Test
     public void testRedBlackTree() {

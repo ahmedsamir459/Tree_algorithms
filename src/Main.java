@@ -1,118 +1,23 @@
+import Heaps.IHeap;
+import Heaps.MaxHeap;
+import Trees.AvlTree;
+import Trees.ITree;
+import Trees.Node;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static Trees.BInarySearchTree.printTree;
+
 public class Main {
     public static void main(String[] args) {
-
-        ITree<Integer> rb = new RedBlackTree<>();
-        rb.insert(10);
-        printTree(rb.getRoot());
-        rb.insert(24);
-        printTree(rb.getRoot());
-        rb.insert(8);
-
-        rb.insert(18);
-//
-        rb.insert(17);
-//
-        rb.insert(27);
-
-//
-        rb.insert(21);
-        printTree(rb.getRoot());
-        rb.remove(17);
-        printTree(rb.getRoot());
-    }
-
-    public static <T extends Comparable<T>> void printTree(Node<T> root) {
-        printSubtree(Collections.singletonList(root), 1, getHeight(root));
-    }
-
-    private static <T extends Comparable<T>> void printSubtree(List<Node<T>> nodes, int level, int maxLevel) {
-        if (nodes.isEmpty() || isAllElementsNull(nodes)) {
-            return;
-        }
-
-        int floor = maxLevel - level;
-        int edgeLines = (int) Math.pow(2, Math.max(floor - 1, 0));
-        int firstSpaces = (int) Math.pow(2, floor) - 1;
-        int betweenSpaces = (int) Math.pow(2, floor + 1) - 1;
-
-        printWhitespaces(firstSpaces);
-
-        List<Node<T>> newNodes = new ArrayList<>();
-        for (Node<T> node : nodes) {
-            if (node != null) {
-                System.out.print(node.getData());
-                System.out.print((node.getColor() == Color.RED) ? "R" : "B");
-                newNodes.add(node.getLeft());
-                newNodes.add(node.getRight());
-            } else {
-                newNodes.add(null);
-                newNodes.add(null);
-                System.out.print(" ");
-            }
-
-            printWhitespaces(betweenSpaces);
-        }
-        System.out.println();
-
-        for (int i = 1; i <= edgeLines; i++) {
-            for (Node<T> node : nodes) {
-                printWhitespaces(firstSpaces - i);
-                if (node == null) {
-                    printWhitespaces(edgeLines + edgeLines + i + 1);
-                    continue;
-                }
-
-                if (node.getLeft() != null) {
-                    System.out.print("/");
-                } else {
-                    printWhitespaces(2);
-                }
-
-                printWhitespaces(i + i - 1);
-
-                if (node.getRight() != null) {
-                    System.out.print("\\");
-                } else {
-                    printWhitespaces(2);
-                }
-
-                printWhitespaces(edgeLines + edgeLines - i);
-            }
-            System.out.println();
-        }
-
-        printSubtree(newNodes, level + 1, maxLevel);
-    }
-
-    private static void printWhitespaces(int count) {
-        for (int i = 0; i < count; i++) {
-            System.out.print(" ");
-        }
-    }
-
-    private static <T extends Comparable<T>> int getHeight(Node<T> node) {
-        if (node == null) {
-            return 0;
-        }
-
-        int leftHeight = getHeight(node.getLeft());
-        int rightHeight = getHeight(node.getRight());
-        return Math.max(leftHeight, rightHeight) + 1;
-    }
-
-    private static <T> boolean isAllElementsNull(List<T> list) {
-        for (T element : list) {
-            if (element != null) {
-                return false;
-            }
-        }
-
-        return true;
+        IHeap<Integer> heap = new MaxHeap<Integer>(10);
+//        9, 12, 7, 2, 5, 1, 6
+        Integer [] data = {9, 12, 7, 2, 5, 1, 6};
+        heap.buildHeap(data);
+        heap.print();
     }
 
 }

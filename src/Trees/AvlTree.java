@@ -1,3 +1,5 @@
+package Trees;
+
 import lombok.Data;
 
 import java.util.LinkedList;
@@ -20,8 +22,11 @@ public class AvlTree <T extends Comparable <T> > implements ITree<T> {
         }
         if (data.compareTo(node.getData()) < 0) {
             node.setLeft(insert(data, node.getLeft()));
-        } else {
+        } else if(data.compareTo(node.getData()) > 0) {
             node.setRight(insert(data, node.getRight()));
+        }
+        else {
+            throw new IllegalArgumentException("Duplicate data");
         }
         updateHeight(node);
         return balance(node);
@@ -78,11 +83,12 @@ public class AvlTree <T extends Comparable <T> > implements ITree<T> {
     }
     private Node<T> remove(T data , Node <T> node){
         if (node == null) {
-            return null;
+            throw new IllegalArgumentException("Data not found");
         }
         if(data.compareTo(node.getData())<0){
             node.setLeft(remove(data, node.getLeft()));
-        } else if (data.compareTo(node.getData())>0) {
+        }
+        else if (data.compareTo(node.getData())>0) {
             node.setRight(remove(data, node.getRight()));
         }
         else {
