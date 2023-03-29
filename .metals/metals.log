@@ -14,3 +14,6 @@ SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
 Mar 29, 2023 4:28:26 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
 WARNING: Unmatched cancel notification for request id 6
 2023.03.29 16:33:07 INFO  time: code lens generation in 1.11s[0m
+2023.03.29 20:39:23 INFO  Shutting down server[0m
+2023.03.29 20:39:23 INFO  shutting down Metals[0m
+2023.03.29 20:39:23 INFO  Exiting server[0m
