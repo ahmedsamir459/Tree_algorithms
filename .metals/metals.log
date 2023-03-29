@@ -10,3 +10,7 @@ SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
 2023.03.29 16:27:02 WARN  no build tool detected in workspace '/home/ahmed/Documents/Tree'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. [0m
 2023.03.29 16:27:02 WARN  no build target for: /home/ahmed/Documents/Tree/src/Trees/ITree.java[0m
 2023.03.29 16:27:04 INFO  time: code lens generation in 1.31s[0m
+2023.03.29 16:28:26 WARN  no build target for: /home/ahmed/Documents/Tree/src/Main.java[0m
+Mar 29, 2023 4:28:26 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 6
+2023.03.29 16:33:07 INFO  time: code lens generation in 1.11s[0m
