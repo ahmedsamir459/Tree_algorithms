@@ -1,7 +1,7 @@
 package Heaps;
 
 public abstract class Heap <T extends Comparable<T>> implements IHeap<T> {
-    protected T[] heap;
+    public T[] heap;
     protected int position=-1;
     protected int size;
     protected abstract void fixup();

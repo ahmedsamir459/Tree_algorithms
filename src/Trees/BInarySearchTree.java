@@ -18,12 +18,16 @@ public class BInarySearchTree <T extends Comparable<T>> implements ITree<T> {
     }
     void insertNode(T newData, Node<T> node) {
         if (newData.compareTo(node.getData()) < 0) {
+
+
             if (node.getLeft() != null) {
                 insertNode(newData, node.getLeft());
             } else {
                 Node<T> newNode = new Node<>(newData);
                 node.setLeft(newNode);
             }
+
+
         } else {
             if (node.getRight() != null) {
                 insertNode(newData, node.getRight());

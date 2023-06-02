@@ -22,22 +22,23 @@ public class MaxHeap<T extends Comparable<T>> extends Heap<T> {
     @Override
     public IHeap<T> buildHeap(T[] data) {
         heap = data;
-        for (int i = (data.length - 1) / 2; i >= 0; i--) {
-            int index = i;
-            int child= 2 * i + 1;
-            while(child<=data.length-1){
-                if(child+1<=data.length-1&&heap[child].compareTo(heap[child+1])>0){
-                    child++;
+        size = data.length;
+        for(int i = data.length / 2-1; i >= 0; i--) {
+            T root = heap[i];
+            position = 2 * i + 1;
+            while (position < data.length) {
+                if (position + 1 < data.length && heap[position].compareTo(heap[position + 1]) < 0) {
+                    position++;
                 }
-                if(heap[index].compareTo(heap[child])<0){
-                    swap(index,child);
-                    index=child;
-                    child=2*index+1;
-                }else{
-                    break;
-                }
+               if(root.compareTo(heap[position])>0){
+                   break;
+               }
+                heap[(position - 1) / 2] = heap[position];
+                position = 2 * position + 1;
             }
+            heap[(position - 1) / 2] = root;
         }
+        position = data.length-1;
         return this;
     }
 
@@ -59,34 +60,7 @@ public class MaxHeap<T extends Comparable<T>> extends Heap<T> {
             fixDown(position);
         }
     }
-    public int[] loudAndRich(int[][] richer, int[] quiet) {
-        int n = quiet.length;
-        List<Integer>[] graph = new List[n];
-        for (int i = 0; i < n; i++) {
-            graph[i] = new ArrayList<>();
-        }
-        for (int[] ints : richer) {
-            graph[ints[1]].add(ints[0]);
-        }
-        int[] ans = new int[n];
-        Arrays.fill(ans, -1);
-        for (int i = 0; i < n; i++) {
-            dfs(graph, quiet, ans, i);
-        }
-        return ans;
-
-    }
-
-    private void dfs(List<Integer>[] graph, int[] quiet, int[] ans, int i) {
-        if (ans[i] != -1) {
-            return;
-        }
-        ans[i] = i;
-        for (int j : graph[i]) {
-            dfs(graph, quiet, ans, j);
-            if (quiet[ans[j]] < quiet[ans[i]]) {
-                ans[i] = ans[j];
-            }
-        }
+    public T[] getHeap(){
+        return heap;
     }
 }
